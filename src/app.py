@@ -2,8 +2,9 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+
 import src.models
-from src.models import Movie, Actor
+
 #================= Just for development
 
 
@@ -18,7 +19,7 @@ from sqlalchemy import create_engine
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
-    db = SQLAlchemy()
+    #db = SQLAlchemy()
     sql = True
     if sql==True:
         database_filename = "database.db"
@@ -30,11 +31,12 @@ def create_app(test_config=None):
     db.app = app
     db.init_app(app)
     db.create_all()
+    db.session.query(User).first()
     ##=======
     move_obj = Movie(title="Franky Goes", duration=120)
     actor_obj = Actor(first_name="Frank",family_name="Goes", movie_id=move_obj)
 
-    db.session.add(move_obj)
+    db.session.add(new_drink)
     db.session.commit()
 
 
