@@ -40,10 +40,11 @@ import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-
+import src.models
+from src.models import Actor,Movie,starredMovie
 # create and configure the app
 app = Flask(__name__)
-# db = SQLAlchemy()
+
 sql = True
 if sql == True:
     database_filename = "database.db"
