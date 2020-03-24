@@ -3,7 +3,7 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 from src.app import create_app
 from src.models import Movie, Actor
-
+import os
 
 class CastingTestCase(unittest.TestCase):
     """This class represents the casting agency test cases"""
@@ -12,16 +12,24 @@ class CastingTestCase(unittest.TestCase):
     def setUpClass(cls):
         """Define test variables and initialize app."""
 
-        cls.app, cls.db = create_app(dbms="sql")
+        cls.app, cls.db = create_app(dbms="sql",test_config=True)
         cls.client = cls.app.test_client
 
         dummy_actor1 = Actor(first_name="Max", family_name="Mustermann")
         dummy_actor2 = Actor(first_name="Gerald", family_name="Mustermann")
-        dummy_movie = Movie(title="Movie XY")
-        dummy_movie.actors.append(dummy_actor1)
-        cls.db.session.add(dummy_movie)
+        dummy_movie1 = Movie(title="Movie XY")
+        dummy_movie2 = Movie(title="Doe goes New York")
+        dummy_movie3 = Movie(title="Tim goes New York")
+        dummy_movie1.actors.append(dummy_actor1)
+        cls.db.session.add(dummy_movie1)
+        cls.db.session.add(dummy_movie2)
+        cls.db.session.add(dummy_movie3)
         cls.db.session.add(dummy_actor2)
         cls.db.session.commit()
+
+    @classmethod
+    def tearDownClass(cls):
+        os.remove("database_test.db")
 
     def tearDown(self):
         """Executed after reach test"""
@@ -43,7 +51,7 @@ class CastingTestCase(unittest.TestCase):
         self.assertEqual(response_data[0]["success"], True)
 
     def test_get_movie(self):
-        query_result = self.db.session.query(Movie).filter_by(title="Movie XY").first()
+        query_result = self.db.session.query(Movie).filter_by(title="Doe goes New York").first()
         response = self.client().get(f'/movie/{query_result.id}')
         response_data = json.loads(response.data)
         self.assertEqual(response_data[1], 200)
@@ -80,11 +88,30 @@ class CastingTestCase(unittest.TestCase):
         self.assertEqual(response_data[1], 204)
         self.assertEqual(response_data[0]["success"], True)
 
+    def test_post_actor(self):
+        response = self.client().post('/actor', data={
+                                                         "movie_title": "Tim goes New York",
+                                                         "first_name": "Hans",
+                                                         "family_name": "Gruber"
+                                                         })
+        response_data = json.loads(response.data)
+        self.assertEqual(response_data[1], 204)
+        self.assertEqual(response_data[0]["success"], True)
+
+
     def test_patch_movie(self):
-        query_result = self.db.session.query(Movie).filter_by(title='Movie XY').first()
+        query_result = self.db.session.query(Movie).filter_by(title='Doe goes New York').first()
         response = self.client().patch('/movie', data={
                                                          "id":query_result.id,
                                                          "title": "Movie 12345",
+                                                         })
+        response_data = json.loads(response.data)
+        self.assertEqual(response_data[1], 204)
+        self.assertEqual(response_data[0]["success"], True)
+
+    def test_post_movie(self):
+        response = self.client().post('/movie', data={
+                                                         "title": "Movie Hans goes to New York",
                                                          })
         response_data = json.loads(response.data)
         self.assertEqual(response_data[1], 204)

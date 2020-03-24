@@ -12,7 +12,10 @@ def create_app(dbms="sql", test_config=None):
     app = Flask(__name__)
 
     if dbms == "sql":
-        database_filename = "database.db"
+        if test_config==True:
+            database_filename = "database_test.db"
+        else:
+            database_filename = "database.db"
         project_dir = os.path.dirname(os.path.abspath(__file__))
         database_path = "sqlite:///{}".format(os.path.join(project_dir, database_filename))
         db = setup_db(app, database_path)
@@ -22,7 +25,17 @@ def create_app(dbms="sql", test_config=None):
         src.models.insert_data(db)
     print(db.session.query(Actor).all())
 
+    '1.Step: config cors'
     CORS(app)
+    cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Headers',
+                             'Content-Type, Authorization')
+        response.headers.add('Access-Control-Allow-Methods',
+                             'GET,POST,PUT,PATCH,DELETE,OPTIONS')
+        return response
 
 
     @app.route('/')
@@ -154,6 +167,29 @@ def create_app(dbms="sql", test_config=None):
             'success': True
         }, 204)
 
+    @app.route("/actor", methods=['Post'])
+    def post_actor():
+        try:
+            request_dict = request.form
+            movie_title = request_dict["movie_title"]
+            first_name = request_dict["first_name"]
+            family_name = request_dict["family_name"]
+
+            query_result = db.session.query(Movie).filter_by(title=movie_title).first()
+            a1 = Actor(first_name=first_name, family_name=family_name)
+            query_result.actors.append(a1)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            db.session.close()
+            abort(400)
+        finally:
+            db.session.close()
+
+        return jsonify({
+            'success': True
+        }, 204)
+
     @app.route("/movie", methods=['Patch'])
     def patch_movie():
         try:
@@ -178,6 +214,26 @@ def create_app(dbms="sql", test_config=None):
         return jsonify({
             'success': True
         }, 204)
+
+    @app.route("/movie", methods=['Post'])
+    def post_movie():
+        try:
+            request_dict = request.form
+            m1 = Movie(title=request_dict["title"])
+            db.session.add(m1)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            db.session.close()
+            abort(404)
+        finally:
+            db.session.close()
+
+        return jsonify({
+            'success': True
+        }, 204)
+
+
     """
     * API:
 
