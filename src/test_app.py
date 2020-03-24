@@ -18,20 +18,21 @@ class CastingTestCase(unittest.TestCase):
         """Define test variables and initialize app."""
 
         cls.header = {"Authorization": "Bearer " +
-                                       "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5FRkVPRE16UVVSRE16aENP" +
-                                       "VEZEUVRkR1FUVXpOVFpGTmtKRlJUbEZNemsyT1RWQ09FRTVRUSJ9.eyJpc3MiOiJodHRwczovL2" +
-                                       "d3aWxsaWcuZXUuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTE1NTY1NDgyODE4Mj" +
-                                       "c4OTAxNTMwIiwiYXVkIjpbImNhc3RpbmdfYWdlbmN5IiwiaHR0cHM6Ly9nd2lsbGlnLmV1LmF1" +
-                                       "dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODUwNTExMjYsImV4cCI6MTU4NTEzNzUxMywiY" +
-                                       "XpwIjoiUVltdW9ha2hiUERqQW1SRFB5ZnBnTGlsemNwV0ZBQUsiLCJzY29wZSI6Im9wZW5pZ" +
-                                       "CBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9yIiwiZGVsZXRlO" +
-                                       "m1vdmllIiwiZ2V0OmFjdG9yIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZSIsImdldDptb3ZpZ" +
-                                       "XMiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92a" +
-                                       "WUiXX0.eKSZxOlWtWaA1V3SqTW8s9XP_F5qk4Xu0dD7sGI8DuySd_4TCGafMITAPXyvOcUGl3" +
-                                       "PGB39F_cuDbHjcc0uwoOg06R-x3KweRzSUUvK9pRnmqf1V9P33LteYsyRAmM5xTj1fEA6jHk6F" +
-                                       "v94m08teFLPTWlIsSnaqio1txqHWsEbLLFOrdVduKHc0XhpJ_pkXnrtTvMJCoZbxxkjP9pbYGg" +
-                                       "o_Jo-aLhTQPX0_7R2RkJ1nLkBKhHszkDSubC9rJ6WNqEWsvHmZgiG1i0J07xyJjS9rYqRFOFOp" +
-                                       "ZA4WGaa7ZpKVGV0k_8h_sWx00IlFF69U9lSATcWuppYRc4Drpu1l8g "
+                                       "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5FRkVPRE16UVVSRE16aENPVE" +
+                                      "ZEUVRkR1FUVXpOVFpGTmtKRlJUbEZNemsyT1RWQ09FRTVRUSJ9.eyJpc3MiOiJodHRwczovL2" +
+                                       "d3aWxsaWcuZXUuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTE1NTY1NDgyODE" +
+                                       "4Mjc4OTAxNTMwIiwiYXVkIjpbImNhc3RpbmdfYWdlbmN5IiwiaHR0cHM6Ly9nd2lsbGlnLmV1" +
+                                       "LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODUwNzgzMTEsImV4cCI6MTU4NTE2NDY5O" +
+                                       "CwiYXpwIjoiUVltdW9ha2hiUERqQW1SRFB5ZnBnTGlsemNwV0ZBQUsiLCJzY29wZSI6Im9wZW" +
+                                       "5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9yIiwiZGVsZXR" +
+                                       "lOm1vdmllIiwiZ2V0OmFjdG9yIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZSIsImdldDptb3Zp" +
+                                       "ZXMiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92a" +
+                                       "WUiXX0.aufLPeJXyJ5GTHj8c4uV6THJ_k8jXOmyN3XKVf-xEdJAQWoRyt_BbYo0ZZxdIzAaVY" +
+                                       "JoN4GLAbruYN6lanUzA_Ms4enP_GsUYJUDLNxhb5IwU6BSecTysM736YfGW5s3xSi75ps7UqP" +
+                                       "UNgrckYopUIQSfj2PMYyq-WByPbfhz4wfXFwK-PfkX_XMVAtQLzFjHrU7m35BKCmZ9JgwmsEk" +
+                                       "B-YoDv904v1qr91JY2_X3GZQJKcmK-PyOW58Z-62zpp9X550Bx4lGnwGATZDlHiUOty66DABk" +
+                                       "WH9XNZMMy2SzcOYSJwmXm46mc3BBpK9c9vO0osMpn1pAbvHI6_T7BDt_Q"
+
                       }
 
         cls.app = create_app(dbms="sql", test_config=True)
