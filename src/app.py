@@ -167,22 +167,22 @@ def create_app(dbms="sql", test_config=None):
     @app.route("/actor", methods=['Post'])
     @requires_auth('post:actor')
     def post_actor(payload):
-        # try:
-        request_dict = process_request(request)
-        movie_title = request_dict["movie_title"]
-        first_name = request_dict["first_name"]
-        family_name = request_dict["family_name"]
+        try:
+            request_dict = process_request(request)
+            movie_title = request_dict["movie_title"]
+            first_name = request_dict["first_name"]
+            family_name = request_dict["family_name"]
 
-        query_result = db.session.query(Movie).filter_by(title=movie_title).first()
-        a1 = Actor(first_name=first_name, family_name=family_name)
-        query_result.actors.append(a1)
-        db.session.commit()
-        # except:
-        #     db.session.rollback()
-        #     db.session.close()
-        #     abort(400)
-        # finally:
-        db.session.close()
+            query_result = db.session.query(Movie).filter_by(title=movie_title).first()
+            a1 = Actor(first_name=first_name, family_name=family_name)
+            query_result.actors.append(a1)
+            db.session.commit()
+        except:
+            db.session.rollback()
+            db.session.close()
+            abort(422)
+        finally:
+            db.session.close()
 
         return jsonify({
             'success': True
@@ -225,7 +225,7 @@ def create_app(dbms="sql", test_config=None):
         except:
             db.session.rollback()
             db.session.close()
-            abort(404)
+            abort(422)
         finally:
             db.session.close()
 

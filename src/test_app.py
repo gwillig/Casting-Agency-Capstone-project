@@ -144,3 +144,38 @@ class CastingTestCase(unittest.TestCase):
         response_data = json.loads(response.data)
         self.assertEqual(response_data[1], 204)
         self.assertEqual(response_data[0]["success"], True)
+
+    def test_404_error(self):
+        # send request
+        response = self.client().get('/patch', headers=self.header, data={"id": 1000})
+        data = json.loads(response.data)
+
+        '#1.Step: Check the error status and msg'
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'resource not found')
+
+    def test_400_error(self):
+        # send request
+        response = self.client().delete('/actor', headers=self.header, data={})
+        data = json.loads(response.data)
+
+        '#1.Step: Check the error status and msg'
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'bad request')
+
+    def test_422_error(self):
+        # send request
+        response = self.client().post(
+            '/actor', data=json.dumps({"1": 1}),
+            headers = self.header,
+            content_type='application/json')
+        data = json.loads(response.data)
+
+        '#1.Step: Check the error status and msg'
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'],
+                         'The server understands the content '
+                         'type of the request entity')
