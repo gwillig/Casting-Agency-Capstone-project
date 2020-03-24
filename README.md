@@ -1,7 +1,4 @@
 ## Casting-Agency-Capstone-project
-
-
-
 This project was the final project for the Udacity Full Stack Developer Nano Degree. To goal was to create a CRUD Application with a RBAC which should be hosted on heroku.
 
 The appliation can be found unter: https://castingagencudacity.herokuapp.com
@@ -12,6 +9,9 @@ There are three possible Roles in the API:
 * Executive Producer.
 
 Auth0 was used for an authentication and authorization management platform.
+###Technologies
+
+* Python3: Flask; SQLAlchemy
 
 ###Getting Started
 Create a python3 virtual environment. Then install all dependencies by running 

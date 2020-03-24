@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <header>
+        <meta charset="UTF-8">
+        <title>Casting Agency</title>
+    </header>
+    <body>
+    <p>
+        <h1>Welcome to the Casting Agency</h1>
+
+        <a href='https://gwillig.eu.auth0.com/authorize?audience=casting_agency&response_type=token&client_id=QYmuoakhbPDjAmRDPyfpgLilzcpWFAAK&redirect_uri=https://castingagencudacity.herokuapp.com/'>
+        Login
+        </a>
+        <h3 style="color:white" id="token_header">Bearer token</h3>
+        <p id="token_p"><p>
+    </p>
+    <script>
+
+        url_string  = window.location.href
+        const fragment = window.location.hash.substr(1).split('&')[0].split('=');
+         // check if the fragment includes the access token
+        if ( fragment[0] === 'access_token' ) {
+            access_token = fragment[1];
+            let token_header = document.querySelector("#token_header");
+            token_header.style.color="black";
+            let token_p = document.querySelector("#token_p");
+            token_p.innerHtml = fragment[1]
+        }
+
+    </script>
+    </body>
+</html>

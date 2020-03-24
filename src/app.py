@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, abort, jsonify
+from flask import Flask, request, abort, jsonify,render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import src.models
@@ -7,7 +7,7 @@ from src.models import setup_db, Actor, Movie, starredMovie
 from sqlalchemy import inspect
 from src.auth import requires_auth
 import json
-
+from flask import render_template
 
 def process_request(request):
     """
@@ -40,7 +40,7 @@ def create_app(dbms="sql", test_config=None):
 
     @app.route('/')
     def index():
-        return "Welcome to the Casting Agency"
+        return render_template('index.html')
 
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
