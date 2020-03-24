@@ -19,6 +19,7 @@ def insert_data(db):
     db.session.add(a3)
     db.session.commit()
 
+
 def setup_db(app, database_path):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -41,6 +42,7 @@ class Actor(db.Model):
         #1.Step: Get all movies in which actor was involved
         inv_movies = [x.title for x  in self.movies]
         return f"{self.first_name} {self.family_name}; starredMovie: {inv_movies}"
+
 
 class Movie(db.Model):
     __tablename__ = 'movies'
