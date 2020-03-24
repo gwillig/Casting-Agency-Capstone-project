@@ -1,25 +1,10 @@
 import os
-from flask import Flask, request, abort, jsonify,render_template
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, request, abort, jsonify, render_template
 from flask_cors import CORS
-import src.models
-from src.models import setup_db, Actor, Movie, starredMovie
+from src.models import setup_db, Actor, Movie
 from sqlalchemy import inspect
 from src.auth import requires_auth
-import json
-from flask import render_template
-
-def process_request(request):
-    """
-    Check if the parametre are in forms or in args
-    :param request:
-    :return:
-    """
-    if len(request.form) == 0:
-        request_dict = request.args
-    else:
-        request_dict = request.form
-    return request_dict
+from src.helper_functions import process_request
 
 
 def create_app(dbms="sql", test_config=None):
@@ -27,7 +12,7 @@ def create_app(dbms="sql", test_config=None):
     app = Flask(__name__)
 
     if dbms == "sql":
-        if test_config == True:
+        if test_config:
             database_filename = "database_test.db"
         else:
             database_filename = "database.db"
@@ -51,11 +36,11 @@ def create_app(dbms="sql", test_config=None):
         :return:
         """
         # Convert sqlalchemy  object into dict
-        queryResult = [convert_sqlalchemy_todict(x) for x in db.session.query(Actor).all()]
+        query_result = [convert_sqlalchemy_todict(x) for x in db.session.query(Actor).all()]
 
         return jsonify({
             'success': True,
-            'actors': queryResult
+            'actors': query_result
         }, 200)
 
     @app.route('/movies', methods=['GET'])
@@ -67,11 +52,11 @@ def create_app(dbms="sql", test_config=None):
         :return:
         """
         # Convert sqlalchemy  object into dict
-        queryResult = [convert_sqlalchemy_todict(x) for x in db.session.query(Movie).all()]
+        query_result = [convert_sqlalchemy_todict(x) for x in db.session.query(Movie).all()]
 
         return jsonify({
             'success': True,
-            'movies': queryResult
+            'movies': query_result
         }, 200)
 
     @app.route('/actor', methods=['GET'])
@@ -85,11 +70,11 @@ def create_app(dbms="sql", test_config=None):
         request_dict = process_request(request)
         actor_id = request_dict["id"]
         # Convert sqlalchemy  object into dict
-        queryResult = convert_sqlalchemy_todict(db.session.query(Actor).filter_by(id=actor_id).first())
+        query_result = convert_sqlalchemy_todict(db.session.query(Actor).filter_by(id=actor_id).first())
 
         return jsonify({
             'success': True,
-            'actors': queryResult
+            'actors': query_result
         }, 200)
 
     @app.route('/movie', methods=['GET'])
@@ -103,11 +88,11 @@ def create_app(dbms="sql", test_config=None):
         request_dict = process_request(request)
         movie_id = request_dict["id"]
         # Convert sqlalchemy  object into dict
-        queryResult = convert_sqlalchemy_todict(db.session.query(Movie).filter_by(id=movie_id).first())
+        query_result = convert_sqlalchemy_todict(db.session.query(Movie).filter_by(id=movie_id).first())
 
         return jsonify({
             'success': True,
-            'actors': queryResult
+            'actors': query_result
         }, 200)
 
     @app.route("/movie", methods=['Delete'])
@@ -268,8 +253,6 @@ def create_app(dbms="sql", test_config=None):
         return {c.key: getattr(obj, c.key)
                 for c in inspect(obj).mapper.column_attrs}
 
-    return app
-
     @app.errorhandler(400)
     def bad_request(error):
         return jsonify(dict(success=False, error=400,
@@ -287,6 +270,9 @@ def create_app(dbms="sql", test_config=None):
                  message='The server understands the '
                          'content type of the request entity')
         ), 422
+
+    return app
+
 
 APP = create_app()
 
