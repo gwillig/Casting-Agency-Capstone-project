@@ -5,6 +5,7 @@ from flask_cors import CORS
 import src.models
 from src.models import setup_db,Actor,Movie,starredMovie
 from sqlalchemy import inspect
+from src.auth import requires_auth
 import json
 
 def create_app(dbms="sql", test_config=None):
@@ -27,15 +28,6 @@ def create_app(dbms="sql", test_config=None):
 
     '1.Step: config cors'
     CORS(app)
-    cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
-    @app.after_request
-    def after_request(response):
-        response.headers.add('Access-Control-Allow-Headers',
-                             'Content-Type, Authorization')
-        response.headers.add('Access-Control-Allow-Methods',
-                             'GET,POST,PUT,PATCH,DELETE,OPTIONS')
-        return response
 
 
     @app.route('/')
@@ -45,7 +37,8 @@ def create_app(dbms="sql", test_config=None):
 
 
     @app.route('/actors', methods=['GET'])
-    def get_all_actors():
+    @requires_auth('get:actors')
+    def get_all_actors(payload):
         """
         Return all actors
 
@@ -60,7 +53,8 @@ def create_app(dbms="sql", test_config=None):
         }, 200)
 
     @app.route('/movies', methods=['GET'])
-    def get_all_movies():
+    @requires_auth('get:movies')
+    def get_all_movies(payload):
         """
         Return all actors
 
@@ -74,42 +68,45 @@ def create_app(dbms="sql", test_config=None):
             'movies': queryResult
         }, 200)
 
-##=
-    @app.route('/actor/<int:actor_id>', methods=['GET'])
-    def get_actor(actor_id):
+    @app.route('/actor', methods=['GET'])
+    @requires_auth('get:actor')
+    def get_actor(payload):
         """
         Return all actors
 
         :return:
         """
         #Convert sqlalchemy  object into dict
-        queryResult = convert_sqlalchemy_todict(db.session.query(Actor).filter_by(id=actor_id).first())
+        queryResult = convert_sqlalchemy_todict(db.session.query(Actor).filter_by(id=request.form["id"]).first())
 
         return jsonify({
             'success': True,
             'actors': queryResult
         }, 200)
 
-    @app.route('/movie/<int:movie_id>', methods=['GET'])
-    def get_movie(movie_id):
+    @app.route('/movie', methods=['GET'])
+    @requires_auth('get:movie')
+    def get_movie(payload):
         """
         Return all actors
 
         :return:
         """
         #Convert sqlalchemy  object into dict
-        queryResult = convert_sqlalchemy_todict(db.session.query(Movie).filter_by(id=movie_id).first())
+        queryResult = convert_sqlalchemy_todict(db.session.query(Movie).filter_by(id=request.form['id']).first())
 
         return jsonify({
             'success': True,
             'actors': queryResult
         }, 200)
 
-##=================0
-    @app.route("/movie/<string:movie_title>", methods=['Delete'])
-    def delete_movie(movie_title):
+    @app.route("/movie", methods=['Delete'])
+    @requires_auth('delete:movie')
+    def delete_movie(payload):
 
         try:
+            request_dict = request.form
+            movie_title = request_dict["title"]
             db.session.query(Movie).filter_by(title=movie_title).delete()
             db.session.commit()
         except:
@@ -123,9 +120,12 @@ def create_app(dbms="sql", test_config=None):
             'success': True
         },204)
 
-    @app.route("/actor/<string:actor_name>", methods=['Delete'])
-    def delete_actor(actor_name):
-        first_name, family_name =actor_name.split("|")
+    @app.route("/actor", methods=['Delete'])
+    @requires_auth('delete:actor')
+    def delete_actor(payload):
+        request_dict = request.form
+        first_name = request_dict["first_name"]
+        family_name = request_dict["family_name"]
         try:
             db.session.query(Actor).filter_by(first_name=first_name,family_name=family_name).delete()
             db.session.commit()
@@ -141,7 +141,8 @@ def create_app(dbms="sql", test_config=None):
         },204)
 
     @app.route("/actor", methods=['Patch'])
-    def patch_actor():
+    @requires_auth('patch:actor')
+    def patch_actor(payload):
         try:
             request_dict = request.form
             actor_id = request_dict["id"]
@@ -168,7 +169,8 @@ def create_app(dbms="sql", test_config=None):
         }, 204)
 
     @app.route("/actor", methods=['Post'])
-    def post_actor():
+    @requires_auth('post:actor')
+    def post_actor(payload):
         try:
             request_dict = request.form
             movie_title = request_dict["movie_title"]
@@ -191,7 +193,8 @@ def create_app(dbms="sql", test_config=None):
         }, 204)
 
     @app.route("/movie", methods=['Patch'])
-    def patch_movie():
+    @requires_auth('patch:movie')
+    def patch_movie(payload):
         try:
             request_dict = request.form
             movie_id = request_dict["id"]
@@ -216,7 +219,8 @@ def create_app(dbms="sql", test_config=None):
         }, 204)
 
     @app.route("/movie", methods=['Post'])
-    def post_movie():
+    @requires_auth('post:movie')
+    def post_movie(payload):
         try:
             request_dict = request.form
             m1 = Movie(title=request_dict["title"])
