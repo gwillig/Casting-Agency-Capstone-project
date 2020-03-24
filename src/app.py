@@ -167,7 +167,7 @@ def create_app(dbms="sql", test_config=None):
     @app.route("/actor", methods=['Post'])
     @requires_auth('post:actor')
     def post_actor(payload):
-        try:
+        # try:
             request_dict = request.form
             movie_title = request_dict["movie_title"]
             first_name = request_dict["first_name"]
@@ -177,16 +177,16 @@ def create_app(dbms="sql", test_config=None):
             a1 = Actor(first_name=first_name, family_name=family_name)
             query_result.actors.append(a1)
             db.session.commit()
-        except:
-            db.session.rollback()
-            db.session.close()
-            abort(400)
-        finally:
+        # except:
+        #     db.session.rollback()
+        #     db.session.close()
+        #     abort(400)
+        # finally:
             db.session.close()
 
-        return jsonify({
-            'success': True
-        }, 204)
+            return jsonify({
+                'success': True
+            }, 204)
 
     @app.route("/movie", methods=['Patch'])
     @requires_auth('patch:movie')
