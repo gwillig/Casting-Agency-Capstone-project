@@ -23,11 +23,6 @@ def create_app(dbms="sql", test_config=None):
         database_path = "sqlite:///{}".format(os.path.join(project_dir, database_filename))
         db = setup_db(app, database_path)
 
-    ###========= Insert data into data base if empty
-    if db.session.query(Actor).count() == 0:
-        src.models.insert_data(db)
-
-
     '1.Step: config cors'
     CORS(app)
 
@@ -258,10 +253,11 @@ def create_app(dbms="sql", test_config=None):
         return {c.key: getattr(obj, c.key)
                 for c in inspect(obj).mapper.column_attrs}
 
-    return app, db
+    return app
 
 
-APP,db = create_app()
+APP = create_app()
+
 if __name__ == '__main__':
-    APP, db = create_app()
+    APP = create_app()
     APP.run(host='0.0.0.0', port=8080, debug=True)

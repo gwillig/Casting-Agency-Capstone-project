@@ -2,11 +2,11 @@ import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
 from src.app import create_app
-from src.models import Movie, Actor
+from src.models import Movie, Actor, setup_db
 import os
 '''
 Link to get token:
-https://gwillig.eu.auth0.com/login?state=g6Fo2SBpUm8tOVA3WkFMc3djRTlEVkU4X0pyS1pvRjJuYVZaNqN0aWTZIG9PZlZad2JaczlQREhUWERxTWVtQnFuQ1BJSTBNUUIxo2NpZNkgUVltdW9ha2hiUERqQW1SRFB5ZnBnTGlsemNwV0ZBQUs&client=QYmuoakhbPDjAmRDPyfpgLilzcpWFAAK&protocol=oauth2&audience=casting_agency&response_type=token&redirect_uri=https%3A%2F%2Flocalhost%3A8080
+https://gwillig.eu.auth0.com/login?state=g6Fo2SBpUm8tOVA3WkFMc3djRTlEVkU4X0pyS1pvRjJuYVZaNqN0aWTZIG9PZlZad2JaczlQREhUWERxTWVtQnFuQ1BJSTBNUUIxo2NpZNkgUVltdW9ha2hiUERqQW1SRFB5ZnBnTGlsemNwV0ZBQUs&client=QYmuoakhbPDjAmRDPyfpgLilzcpWFAAK&protocol=oauth2&audience=casting_agency&response_type=token&redirect_uri=https://castingagencudacity.herokuapp.com/ 
 '''
 class CastingTestCase(unittest.TestCase):
     """This class represents the casting agency test cases"""
@@ -15,22 +15,30 @@ class CastingTestCase(unittest.TestCase):
     def setUpClass(cls):
         """Define test variables and initialize app."""
 
-        cls.app, cls.db = create_app(dbms="sql",test_config=True)
+        cls.header = {"Authorization":"Bearer "+
+                        "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5FRkVPRE16UVVSRE16aENPVEZEUVRkR1FUVXpOVFpGTmtKRlJUbEZNemsyT1RWQ09FRTVRUSJ9.eyJpc3MiOiJodHRwczovL2d3aWxsaWcuZXUuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTE1NTY1NDgyODE4Mjc4OTAxNTMwIiwiYXVkIjpbImNhc3RpbmdfYWdlbmN5IiwiaHR0cHM6Ly9nd2lsbGlnLmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODUwNTExMjYsImV4cCI6MTU4NTEzNzUxMywiYXpwIjoiUVltdW9ha2hiUERqQW1SRFB5ZnBnTGlsemNwV0ZBQUsiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9yIiwiZGVsZXRlOm1vdmllIiwiZ2V0OmFjdG9yIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZSIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92aWUiXX0.eKSZxOlWtWaA1V3SqTW8s9XP_F5qk4Xu0dD7sGI8DuySd_4TCGafMITAPXyvOcUGl3PGB39F_cuDbHjcc0uwoOg06R-x3KweRzSUUvK9pRnmqf1V9P33LteYsyRAmM5xTj1fEA6jHk6Fv94m08teFLPTWlIsSnaqio1txqHWsEbLLFOrdVduKHc0XhpJ_pkXnrtTvMJCoZbxxkjP9pbYGgo_Jo-aLhTQPX0_7R2RkJ1nLkBKhHszkDSubC9rJ6WNqEWsvHmZgiG1i0J07xyJjS9rYqRFOFOpZA4WGaa7ZpKVGV0k_8h_sWx00IlFF69U9lSATcWuppYRc4Drpu1l8g"
+                     }
+
+        cls.app= create_app(dbms="sql",test_config=True)
+        project_dir = os.path.dirname(os.path.abspath(__file__))
+        database_path = "sqlite:///{}".format(os.path.join(project_dir, "database_test.db"))
+        cls.db = setup_db(cls.app,database_path)
         cls.client = cls.app.test_client
 
         dummy_actor1 = Actor(first_name="Max", family_name="Mustermann")
-        dummy_actor2 = Actor(first_name="Gerald", family_name="Mustermann")
+
         dummy_movie1 = Movie(title="Movie XY")
-        dummy_movie2 = Movie(title="Doe goes New York")
-        dummy_movie3 = Movie(title="Tim goes New York")
         dummy_movie1.actors.append(dummy_actor1)
-        cls.header = {"Authorization":"Bearer "+
-                    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5FRkVPRE16UVVSRE16aENPVEZEUVRkR1FUVXpOVFpGTmtKRlJUbEZNemsyT1RWQ09FRTVRUSJ9.eyJpc3MiOiJodHRwczovL2d3aWxsaWcuZXUuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTE1NTY1NDgyODE4Mjc4OTAxNTMwIiwiYXVkIjpbImNhc3RpbmdfYWdlbmN5IiwiaHR0cHM6Ly9nd2lsbGlnLmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODUwNDEwMzEsImV4cCI6MTU4NTA0ODIzMSwiYXpwIjoiUVltdW9ha2hiUERqQW1SRFB5ZnBnTGlsemNwV0ZBQUsiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9yIiwiZGVsZXRlOm1vdmllIiwiZ2V0OmFjdG9yIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZSIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92aWUiXX0.NUlmTGG8WV-uEsp2UK_2cDo_4_4YwTbkkYHOXBjgLIP0a162Vw_v0BEPRp3P88S7y9LDhe1hy1A29zNIFZ6bVXMOZSIlyMcyszYQQQ4KCGYjmGNeNChsPhP3VLWmQFEcJTSUKH3O381UTp5fTregC14trOdXcCIGPLypXlmH7eeiTUHpt_ovDmdK6e-T-py4y_8G3CWS_mRAtHr0bkC4UBvZxh_DIF4PBdy55HkHRMl0kj3cSXxdrzMuiyXpK9L3PWiGDjO5kXSdNqUp4Laxj9xb-Fy7wHyOTxrDVNGWmMh2rlCJaAX5OEz-8y3pikYyZy-LiCcBBB2HcXhSGydUzg"
-                    }
-        cls.db.session.add(dummy_movie1)
-        cls.db.session.add(dummy_movie2)
-        cls.db.session.add(dummy_movie3)
-        cls.db.session.add(dummy_actor2)
+
+        cls.db.session.bulk_save_objects(
+            [
+                Actor(first_name="Gerald", family_name="Mustermann"),
+                Actor(first_name="Albert", family_name="Mustermann"),
+                Movie(title="Doe goes New York"),
+                Movie(title="Tim goes New York"),
+                dummy_movie1
+              ])
+
         cls.db.session.commit()
 
     @classmethod
@@ -51,8 +59,7 @@ class CastingTestCase(unittest.TestCase):
 
 
     def test_get_actor(self):
-        query_result = self.db.session.query(Actor).filter_by(first_name="Gerald", family_name="Mustermann").first()
-        response = self.client().get(f'/actor',data ={'id':query_result.id}, headers=self.header)
+        response = self.client().get(f'/actor',data ={'id':1}, headers=self.header)
         response_data = json.loads(response.data)
         self.assertEqual(response_data[1], 200)
         self.assertEqual(response_data[0]["success"], True)
