@@ -34,6 +34,7 @@ class CastingTestCase(unittest.TestCase):
             [
                 Actor(first_name="Gerald", family_name="Mustermann"),
                 Actor(first_name="Albert", family_name="Mustermann"),
+                Actor(first_name="Max", family_name="Mustermann"),
                 Movie(title="Doe goes New York"),
                 Movie(title="Tim goes New York"),
                 dummy_movie1
@@ -87,7 +88,7 @@ class CastingTestCase(unittest.TestCase):
         self.assertEqual(response_data[0]["success"], True)
 
     def test_delete_actor(self):
-        response = self.client().delete('/actor', headers=self.header,data={"first_name":"Max",
+        response = self.client().delete('/actor',headers=self.header,data={"first_name":"Max",
                                                                             "family_name":"Mustermann"})
         response_data = json.loads(response.data)
         # Check response
@@ -134,7 +135,9 @@ class CastingTestCase(unittest.TestCase):
 
 def manu_test():
     from urllib import request
-
+    header = {"Authorization": "Bearer " +
+                               "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5FRkVPRE16UVVSRE16aENPVEZEUVRkR1FUVXpOVFpGTmtKRlJUbEZNemsyT1RWQ09FRTVRUSJ9.eyJpc3MiOiJodHRwczovL2d3aWxsaWcuZXUuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTE1NTY1NDgyODE4Mjc4OTAxNTMwIiwiYXVkIjpbImNhc3RpbmdfYWdlbmN5IiwiaHR0cHM6Ly9nd2lsbGlnLmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODUwNTExMjYsImV4cCI6MTU4NTEzNzUxMywiYXpwIjoiUVltdW9ha2hiUERqQW1SRFB5ZnBnTGlsemNwV0ZBQUsiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9yIiwiZGVsZXRlOm1vdmllIiwiZ2V0OmFjdG9yIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZSIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92aWUiXX0.eKSZxOlWtWaA1V3SqTW8s9XP_F5qk4Xu0dD7sGI8DuySd_4TCGafMITAPXyvOcUGl3PGB39F_cuDbHjcc0uwoOg06R-x3KweRzSUUvK9pRnmqf1V9P33LteYsyRAmM5xTj1fEA6jHk6Fv94m08teFLPTWlIsSnaqio1txqHWsEbLLFOrdVduKHc0XhpJ_pkXnrtTvMJCoZbxxkjP9pbYGgo_Jo-aLhTQPX0_7R2RkJ1nLkBKhHszkDSubC9rJ6WNqEWsvHmZgiG1i0J07xyJjS9rYqRFOFOpZA4WGaa7ZpKVGV0k_8h_sWx00IlFF69U9lSATcWuppYRc4Drpu1l8g"
+              }
     for path in ["", "/actors"]:
         requ = request.urlopen("".join(["https://castingagencudacity.herokuapp.com/", path]))
         print(f"path: {path}, status: {requ.status}")

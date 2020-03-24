@@ -3,11 +3,23 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import src.models
-from src.models import setup_db,Actor,Movie,starredMovie
+from src.models import setup_db, Actor, Movie, starredMovie
 from sqlalchemy import inspect
 from src.auth import requires_auth
 import json
 
+
+def process_request(request):
+    """
+    Check if the parametre are in forms or in args
+    :param request:
+    :return:
+    """
+    if len(request.form) == 0:
+        request_dict = request.args
+    else:
+        request_dict = request.form
+    return request_dict
 
 
 def create_app(dbms="sql", test_config=None):
@@ -15,7 +27,7 @@ def create_app(dbms="sql", test_config=None):
     app = Flask(__name__)
 
     if dbms == "sql":
-        if test_config==True:
+        if test_config == True:
             database_filename = "database_test.db"
         else:
             database_filename = "database.db"
@@ -26,11 +38,9 @@ def create_app(dbms="sql", test_config=None):
     '1.Step: config cors'
     CORS(app)
 
-
     @app.route('/')
     def index():
         return "Welcome to the Casting Agency"
-
 
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
@@ -40,7 +50,7 @@ def create_app(dbms="sql", test_config=None):
 
         :return:
         """
-        #Convert sqlalchemy  object into dict
+        # Convert sqlalchemy  object into dict
         queryResult = [convert_sqlalchemy_todict(x) for x in db.session.query(Actor).all()]
 
         return jsonify({
@@ -56,7 +66,7 @@ def create_app(dbms="sql", test_config=None):
 
         :return:
         """
-        #Convert sqlalchemy  object into dict
+        # Convert sqlalchemy  object into dict
         queryResult = [convert_sqlalchemy_todict(x) for x in db.session.query(Movie).all()]
 
         return jsonify({
@@ -72,8 +82,10 @@ def create_app(dbms="sql", test_config=None):
 
         :return:
         """
-        #Convert sqlalchemy  object into dict
-        queryResult = convert_sqlalchemy_todict(db.session.query(Actor).filter_by(id=request.form["id"]).first())
+        request_dict = process_request(request)
+        actor_id = request_dict["id"]
+        # Convert sqlalchemy  object into dict
+        queryResult = convert_sqlalchemy_todict(db.session.query(Actor).filter_by(id=actor_id).first())
 
         return jsonify({
             'success': True,
@@ -88,8 +100,10 @@ def create_app(dbms="sql", test_config=None):
 
         :return:
         """
-        #Convert sqlalchemy  object into dict
-        queryResult = convert_sqlalchemy_todict(db.session.query(Movie).filter_by(id=request.form['id']).first())
+        request_dict = process_request(request)
+        movie_id = request_dict["id"]
+        # Convert sqlalchemy  object into dict
+        queryResult = convert_sqlalchemy_todict(db.session.query(Movie).filter_by(id=movie_id).first())
 
         return jsonify({
             'success': True,
@@ -101,7 +115,7 @@ def create_app(dbms="sql", test_config=None):
     def delete_movie(payload):
 
         try:
-            request_dict = request.form
+            request_dict = process_request(request)
             movie_title = request_dict["title"]
             db.session.query(Movie).filter_by(title=movie_title).delete()
             db.session.commit()
@@ -114,16 +128,17 @@ def create_app(dbms="sql", test_config=None):
 
         return jsonify({
             'success': True
-        },204)
+        }, 204)
 
     @app.route("/actor", methods=['Delete'])
     @requires_auth('delete:actor')
     def delete_actor(payload):
-        request_dict = request.form
+
+        request_dict = process_request(request)
         first_name = request_dict["first_name"]
         family_name = request_dict["family_name"]
         try:
-            db.session.query(Actor).filter_by(first_name=first_name,family_name=family_name).delete()
+            db.session.query(Actor).filter_by(first_name=first_name, family_name=family_name).delete()
             db.session.commit()
         except:
             db.session.rollback()
@@ -134,13 +149,13 @@ def create_app(dbms="sql", test_config=None):
 
         return jsonify({
             'success': True
-        },204)
+        }, 204)
 
     @app.route("/actor", methods=['Patch'])
     @requires_auth('patch:actor')
     def patch_actor(payload):
         try:
-            request_dict = request.form
+            request_dict = process_request(request)
             actor_id = request_dict["id"]
             first_name = request_dict["first_name"]
             family_name = request_dict["family_name"]
@@ -168,31 +183,31 @@ def create_app(dbms="sql", test_config=None):
     @requires_auth('post:actor')
     def post_actor(payload):
         # try:
-            request_dict = request.form
-            movie_title = request_dict["movie_title"]
-            first_name = request_dict["first_name"]
-            family_name = request_dict["family_name"]
+        request_dict = process_request(request)
+        movie_title = request_dict["movie_title"]
+        first_name = request_dict["first_name"]
+        family_name = request_dict["family_name"]
 
-            query_result = db.session.query(Movie).filter_by(title=movie_title).first()
-            a1 = Actor(first_name=first_name, family_name=family_name)
-            query_result.actors.append(a1)
-            db.session.commit()
+        query_result = db.session.query(Movie).filter_by(title=movie_title).first()
+        a1 = Actor(first_name=first_name, family_name=family_name)
+        query_result.actors.append(a1)
+        db.session.commit()
         # except:
         #     db.session.rollback()
         #     db.session.close()
         #     abort(400)
         # finally:
-            db.session.close()
+        db.session.close()
 
-            return jsonify({
-                'success': True
-            }, 204)
+        return jsonify({
+            'success': True
+        }, 204)
 
     @app.route("/movie", methods=['Patch'])
     @requires_auth('patch:movie')
     def patch_movie(payload):
         try:
-            request_dict = request.form
+            request_dict = process_request(request)
             movie_id = request_dict["id"]
             title = request_dict["title"]
             query_result = db.session.query(Movie).filter_by(id=movie_id)
@@ -218,7 +233,7 @@ def create_app(dbms="sql", test_config=None):
     @requires_auth('post:movie')
     def post_movie(payload):
         try:
-            request_dict = request.form
+            request_dict = process_request(request)
             m1 = Movie(title=request_dict["title"])
             db.session.add(m1)
             db.session.commit()
@@ -233,7 +248,6 @@ def create_app(dbms="sql", test_config=None):
             'success': True
         }, 204)
 
-
     """
     * API:
 
@@ -244,6 +258,7 @@ def create_app(dbms="sql", test_config=None):
     
     
     """
+
     def convert_sqlalchemy_todict(obj):
         """
         Converts a sqlalchemy oject to a dict
