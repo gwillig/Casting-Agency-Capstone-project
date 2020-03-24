@@ -14,26 +14,18 @@ class CastingTestCase(unittest.TestCase):
 
         cls.app, cls.db = create_app(dbms="sql")
         cls.client = cls.app.test_client
-        # binds the app to the current context
-        with cls.app.app_context():
-            cls.db = SQLAlchemy()
-            cls.db.init_app(cls.app)
-            # create all tables
-            cls.db.create_all()
-            dummy_actor1 = Actor(first_name="Max", family_name="Mustermann")
-            dummy_actor2 = Actor(first_name="Gerald", family_name="Mustermann")
-            dummy_movie = Movie(title="Movie XY")
-            dummy_movie.actors.append(dummy_actor1)
-            cls.db.session.add(dummy_movie)
-            cls.db.session.add(dummy_actor2)
-            cls.db.session.commit()
 
+        dummy_actor1 = Actor(first_name="Max", family_name="Mustermann")
+        dummy_actor2 = Actor(first_name="Gerald", family_name="Mustermann")
+        dummy_movie = Movie(title="Movie XY")
+        dummy_movie.actors.append(dummy_actor1)
+        cls.db.session.add(dummy_movie)
+        cls.db.session.add(dummy_actor2)
+        cls.db.session.commit()
 
     def tearDown(self):
         """Executed after reach test"""
         pass
-
-
 
     def test_get_all_actors(self):
         response = self.client().get('/actors')
@@ -41,6 +33,22 @@ class CastingTestCase(unittest.TestCase):
         # Check response
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response_data[0]["success"], True)
+
+
+    def test_get_actor(self):
+        query_result = self.db.session.query(Actor).filter_by(first_name="Gerald", family_name="Mustermann").first()
+        response = self.client().get(f'/actor/{query_result.id}')
+        response_data = json.loads(response.data)
+        self.assertEqual(response_data[1], 200)
+        self.assertEqual(response_data[0]["success"], True)
+
+    def test_get_movie(self):
+        query_result = self.db.session.query(Movie).filter_by(title="Movie XY").first()
+        response = self.client().get(f'/movie/{query_result.id}')
+        response_data = json.loads(response.data)
+        self.assertEqual(response_data[1], 200)
+        self.assertEqual(response_data[0]["success"], True)
+
 
     def test_get_all_movies(self):
         response = self.client().get('/movies')
@@ -64,15 +72,24 @@ class CastingTestCase(unittest.TestCase):
         self.assertEqual(response_data[0]["success"], True)
 
     def test_patch_actor(self):
-        query_result = ""
-        with self.app.app_context():
-            query_result = self.db.session.query(Actor).filter_by(first_name="Gerald", family_name="Mustermann").first()
+        query_result = self.db.session.query(Actor).filter_by(first_name="Gerald", family_name="Mustermann").first()
         response = self.client().patch('/actor', data={"id":query_result.id,
                                                          "first_name":"Franz",
                                                          "family_name":"Mueller"})
         response_data = json.loads(response.data)
         self.assertEqual(response_data[1], 204)
         self.assertEqual(response_data[0]["success"], True)
+
+    def test_patch_movie(self):
+        query_result = self.db.session.query(Movie).filter_by(title='Movie XY').first()
+        response = self.client().patch('/movie', data={
+                                                         "id":query_result.id,
+                                                         "title": "Movie 12345",
+                                                         })
+        response_data = json.loads(response.data)
+        self.assertEqual(response_data[1], 204)
+        self.assertEqual(response_data[0]["success"], True)
+
 def manu_test():
     from urllib import request
 

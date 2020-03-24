@@ -10,7 +10,6 @@ import json
 def create_app(dbms="sql", test_config=None):
     # create and configure the app
     app = Flask(__name__)
-    db ="test"
 
     if dbms == "sql":
         database_filename = "database.db"
@@ -62,6 +61,38 @@ def create_app(dbms="sql", test_config=None):
             'movies': queryResult
         }, 200)
 
+##=
+    @app.route('/actor/<int:actor_id>', methods=['GET'])
+    def get_actor(actor_id):
+        """
+        Return all actors
+
+        :return:
+        """
+        #Convert sqlalchemy  object into dict
+        queryResult = convert_sqlalchemy_todict(db.session.query(Actor).filter_by(id=actor_id).first())
+
+        return jsonify({
+            'success': True,
+            'actors': queryResult
+        }, 200)
+
+    @app.route('/movie/<int:movie_id>', methods=['GET'])
+    def get_movie(movie_id):
+        """
+        Return all actors
+
+        :return:
+        """
+        #Convert sqlalchemy  object into dict
+        queryResult = convert_sqlalchemy_todict(db.session.query(Movie).filter_by(id=movie_id).first())
+
+        return jsonify({
+            'success': True,
+            'actors': queryResult
+        }, 200)
+
+##=================0
     @app.route("/movie/<string:movie_title>", methods=['Delete'])
     def delete_movie(movie_title):
 
@@ -100,10 +131,10 @@ def create_app(dbms="sql", test_config=None):
     def patch_actor():
         try:
             request_dict = request.form
-            id = request_dict["id"]
+            actor_id = request_dict["id"]
             first_name = request_dict["first_name"]
             family_name = request_dict["family_name"]
-            query_result = db.session.query(Actor).filter_by(id=id)
+            query_result = db.session.query(Actor).filter_by(id=actor_id)
             if query_result.count() == 0:
                 return jsonify({
                     'success': False
@@ -121,13 +152,35 @@ def create_app(dbms="sql", test_config=None):
 
         return jsonify({
             'success': True
-        },204)
+        }, 204)
+
+    @app.route("/movie", methods=['Patch'])
+    def patch_movie():
+        try:
+            request_dict = request.form
+            movie_id = request_dict["id"]
+            title = request_dict["title"]
+            query_result = db.session.query(Movie).filter_by(id=movie_id)
+            if query_result.count() == 0:
+                return jsonify({
+                    'success': False
+                }, 404)
+            else:
+                query_result.title = title
+                db.session.commit()
+        except:
+            db.session.rollback()
+            db.session.close()
+            abort(404)
+        finally:
+            db.session.close()
+
+        return jsonify({
+            'success': True
+        }, 204)
     """
     * API:
-        * GET /actors and /movies
-        * DELETE /actors/ and /movies/
-        * POST /actors and /movies and
-        * PATCH /actors/ and /movies/
+
         * Testing:  
             * One test for success behavior of each endpoint
             * One test for error behavior of each endpoint
