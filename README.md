@@ -3,12 +3,26 @@ This project was the final project for the Udacity Full Stack Developer Nano Deg
 
 The appliation can be found unter: https://castingagencudacity.herokuapp.com
 
-There are three possible Roles in the API: 
-* Casting Assistant
-* Casting Director 
-* Executive Producer.
+There are three possible Roles in the API. Auth0 was used as authentication and authorization management platform.
+For each role there is a one register user:
 
-Auth0 was used for an authentication and authorization management platform.
+* Casting Assistant
+    ```
+    email: assistent@castingudacity.com
+    Password: Test123!
+    ```
+* Casting Director 
+    ```
+    email: director@castingudacity.com
+    Password: Test123!
+    ```
+* Executive Producer
+    ```
+    email: executive@castingudacity.com
+    Password: Test123!
+    ```
+
+
 ###Technologies
 
 * Python3: Flask; SQLAlchemy
@@ -40,3 +54,5 @@ The API will return three types of errors:
 * **PATCH /actor**: This endpoint will modify a actor which is in the database corresponds to the data which was passed by http-request
 * **PATCH /movie**: This endpoint will modify a movie which is in the database corresponds to the data which was passed by http-request
 ### 
+
+
