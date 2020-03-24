@@ -128,7 +128,7 @@ class CastingTestCase(unittest.TestCase):
 def manu_test():
     from urllib import request
 
-    for path in ["","/actors"]:
-        requ = request.urlopen("".join(["http://127.0.0.1:8080", path]))
+    for path in ["", "/actors"]:
+        requ = request.urlopen("".join(["https://castingagencudacity.herokuapp.com/", path]))
         print(f"path: {path}, status: {requ.status}")
 

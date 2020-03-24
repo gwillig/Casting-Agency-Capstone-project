@@ -8,6 +8,8 @@ from sqlalchemy import inspect
 from src.auth import requires_auth
 import json
 
+
+
 def create_app(dbms="sql", test_config=None):
     # create and configure the app
     app = Flask(__name__)
@@ -24,7 +26,7 @@ def create_app(dbms="sql", test_config=None):
     ###========= Insert data into data base if empty
     if db.session.query(Actor).count() == 0:
         src.models.insert_data(db)
-    print(db.session.query(Actor).all())
+
 
     '1.Step: config cors'
     CORS(app)
@@ -32,7 +34,6 @@ def create_app(dbms="sql", test_config=None):
 
     @app.route('/')
     def index():
-        print("hello world")
         return "Welcome to the Casting Agency"
 
 
@@ -258,6 +259,9 @@ def create_app(dbms="sql", test_config=None):
                 for c in inspect(obj).mapper.column_attrs}
 
     return app, db
+
+
+APP,db = create_app()
 if __name__ == '__main__':
     APP, db = create_app()
     APP.run(host='0.0.0.0', port=8080, debug=True)
