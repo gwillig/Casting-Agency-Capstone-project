@@ -1,0 +1,199 @@
+{
+	"info": {
+		"_postman_id": "2d8dfb68-45e7-4d8f-8e89-ed09368dd7b8",
+		"name": "Casting Agency",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Casting Assistant ",
+			"item": [
+				{
+					"name": "Get all actors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all movies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://castingagencudacity.herokuapp.com/movies",
+							"protocol": "https",
+							"host": [
+								"castingagencudacity",
+								"herokuapp",
+								"com"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5FRkVPRE16UVVSRE16aENPVEZEUVRkR1FUVXpOVFpGTmtKRlJUbEZNemsyT1RWQ09FRTVRUSJ9.eyJpc3MiOiJodHRwczovL2d3aWxsaWcuZXUuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTE1NTY1NDgyODE4Mjc4OTAxNTMwIiwiYXVkIjpbImNhc3RpbmdfYWdlbmN5IiwiaHR0cHM6Ly9nd2lsbGlnLmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODUwNTExMjYsImV4cCI6MTU4NTEzNzUxMywiYXpwIjoiUVltdW9ha2hiUERqQW1SRFB5ZnBnTGlsemNwV0ZBQUsiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9yIiwiZGVsZXRlOm1vdmllIiwiZ2V0OmFjdG9yIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZSIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92aWUiXX0.eKSZxOlWtWaA1V3SqTW8s9XP_F5qk4Xu0dD7sGI8DuySd_4TCGafMITAPXyvOcUGl3PGB39F_cuDbHjcc0uwoOg06R-x3KweRzSUUvK9pRnmqf1V9P33LteYsyRAmM5xTj1fEA6jHk6Fv94m08teFLPTWlIsSnaqio1txqHWsEbLLFOrdVduKHc0XhpJ_pkXnrtTvMJCoZbxxkjP9pbYGgo_Jo-aLhTQPX0_7R2RkJ1nLkBKhHszkDSubC9rJ6WNqEWsvHmZgiG1i0J07xyJjS9rYqRFOFOpZA4WGaa7ZpKVGV0k_8h_sWx00IlFF69U9lSATcWuppYRc4Drpu1l8g",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6932e484-178f-4a74-ba43-9d16b6124631",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "84151b7f-3bab-4535-8e71-1f9153e0186c",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Casting Director ",
+			"item": [
+				{
+					"name": "Modify actor",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5FRkVPRE16UVVSRE16aENPVEZEUVRkR1FUVXpOVFpGTmtKRlJUbEZNemsyT1RWQ09FRTVRUSJ9.eyJpc3MiOiJodHRwczovL2d3aWxsaWcuZXUuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTE1NTY1NDgyODE4Mjc4OTAxNTMwIiwiYXVkIjpbImNhc3RpbmdfYWdlbmN5IiwiaHR0cHM6Ly9nd2lsbGlnLmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODUwNTExMjYsImV4cCI6MTU4NTEzNzUxMywiYXpwIjoiUVltdW9ha2hiUERqQW1SRFB5ZnBnTGlsemNwV0ZBQUsiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9yIiwiZGVsZXRlOm1vdmllIiwiZ2V0OmFjdG9yIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZSIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92aWUiXX0.eKSZxOlWtWaA1V3SqTW8s9XP_F5qk4Xu0dD7sGI8DuySd_4TCGafMITAPXyvOcUGl3PGB39F_cuDbHjcc0uwoOg06R-x3KweRzSUUvK9pRnmqf1V9P33LteYsyRAmM5xTj1fEA6jHk6Fv94m08teFLPTWlIsSnaqio1txqHWsEbLLFOrdVduKHc0XhpJ_pkXnrtTvMJCoZbxxkjP9pbYGgo_Jo-aLhTQPX0_7R2RkJ1nLkBKhHszkDSubC9rJ6WNqEWsvHmZgiG1i0J07xyJjS9rYqRFOFOpZA4WGaa7ZpKVGV0k_8h_sWx00IlFF69U9lSATcWuppYRc4Drpu1l8g",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "71d7a488-18d1-48da-9936-96b81c54325f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c64b04f9-f485-4ab3-8b5e-38b87cdaa600",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Executive Producer",
+			"item": [
+				{
+					"name": "Add new movie",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5FRkVPRE16UVVSRE16aENPVEZEUVRkR1FUVXpOVFpGTmtKRlJUbEZNemsyT1RWQ09FRTVRUSJ9.eyJpc3MiOiJodHRwczovL2d3aWxsaWcuZXUuYXV0aDAuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTE1NTY1NDgyODE4Mjc4OTAxNTMwIiwiYXVkIjpbImNhc3RpbmdfYWdlbmN5IiwiaHR0cHM6Ly9nd2lsbGlnLmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1ODUwNTExMjYsImV4cCI6MTU4NTEzNzUxMywiYXpwIjoiUVltdW9ha2hiUERqQW1SRFB5ZnBnTGlsemNwV0ZBQUsiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwicGVybWlzc2lvbnMiOlsiZGVsZXRlOmFjdG9yIiwiZGVsZXRlOm1vdmllIiwiZ2V0OmFjdG9yIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZSIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvciIsInBhdGNoOm1vdmllIiwicG9zdDphY3RvciIsInBvc3Q6bW92aWUiXX0.eKSZxOlWtWaA1V3SqTW8s9XP_F5qk4Xu0dD7sGI8DuySd_4TCGafMITAPXyvOcUGl3PGB39F_cuDbHjcc0uwoOg06R-x3KweRzSUUvK9pRnmqf1V9P33LteYsyRAmM5xTj1fEA6jHk6Fv94m08teFLPTWlIsSnaqio1txqHWsEbLLFOrdVduKHc0XhpJ_pkXnrtTvMJCoZbxxkjP9pbYGgo_Jo-aLhTQPX0_7R2RkJ1nLkBKhHszkDSubC9rJ6WNqEWsvHmZgiG1i0J07xyJjS9rYqRFOFOpZA4WGaa7ZpKVGV0k_8h_sWx00IlFF69U9lSATcWuppYRc4Drpu1l8g",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "1fb56714-a565-463f-bb27-faca9b84b926",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ff9e768-fc37-4bde-be61-5fe33ff2cf77",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a6837fe6-531e-40f7-a07c-ba13efea227a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "cf35ffb1-d907-4266-9477-77127315307b",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
