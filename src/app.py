@@ -270,6 +270,23 @@ def create_app(dbms="sql", test_config=None):
 
     return app
 
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify(dict(success=False, error=400,
+                            message='bad request')), 400
+
+    @app.errorhandler(404)
+    def resource_not_found(error):
+        return jsonify(dict(success=False, error=404,
+                            message='resource not found')), 404
+
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify(
+            dict(success=False, error=422,
+                 message='The server understands the '
+                         'content type of the request entity')
+        ), 422
 
 APP = create_app()
 
